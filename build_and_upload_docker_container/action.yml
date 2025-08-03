@@ -20,15 +20,22 @@ runs:
         context: .
         platforms: linux/arm64
         push: false
-        tags: ${{ inputs.IMAGE_NAME }}:latest
+        load: true
+        tags: |
+          ${{ inputs.IMAGE_NAME }}:latest
+          ${{ inputs.IMAGE_NAME }}:${{ github.run_number }}-${{ github.run_attempt }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
+
+    - name: Verify image exists
+      shell: bash
+      run: docker image ls ${{ inputs.IMAGE_NAME }}:${{ github.run_number }}-${{ github.run_attempt }}
 
     - name: Save Docker image
       shell: bash
       run: |
         mkdir -p image-artifact
-        docker save ${{ inputs.IMAGE_NAME }}:latest > image-artifact/${{ inputs.IMAGE_NAME }}.tar
+        docker save ${{ inputs.IMAGE_NAME }}:${{ github.run_number }}-${{ github.run_attempt }} > image-artifact/${{ inputs.IMAGE_NAME }}.tar
 
     - name: Upload Docker image as artifact
       uses: actions/upload-artifact@v4
