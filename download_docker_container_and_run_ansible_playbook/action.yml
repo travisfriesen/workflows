@@ -1,0 +1,43 @@
+name: Download Docker Container and Run Ansible Playbook
+description: 'This action downloads a Docker container artifact and runs an Ansible playbook to deploy it.'
+inputs:
+  EXTRA_VARS:
+    description: 'Extra variables for the Ansible playbook'
+    required: true
+    type: string
+  ENVIRONMENT:
+    description: 'The deployment environment'
+    required: true
+    type: string
+  ARTIFACT_NAME:
+    description: 'The name of the Docker image artifact to download'
+    required: true
+    type: string
+  USER:
+    description: 'The user to run the Ansible playbook as'
+    required: true
+    type: string
+  PLAYBOOK_PATH:
+    description: 'The path to the Ansible playbook to run'
+    required: true
+    type: string
+  HOST:
+    description: 'The host to run the Ansible playbook against'
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ inputs.ARTIFACT_NAME }}
+        path: /tmp/${{ inputs.ENVIRONMENT }}
+
+    - name: Run Ansible Playbook
+      shell: bash
+      env:
+        ANSIBLE_HOST_KEY_CHECKING: 'False'
+      run: |
+        ansible-playbook -i ${{ inputs.HOST }}, ${{ inputs.PLAYBOOK_PATH }} --user ${{ inputs.USER }} --extra-vars "${{ inputs.EXTRA_VARS }}"
