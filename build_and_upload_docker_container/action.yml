@@ -4,10 +4,16 @@ inputs:
   IMAGE_NAME:
     description: 'The name of the Docker image to build and save.'
     required: true
+  BUILD_ARGS:
+    description: 'The build arguments for Docker to build'
+    required: true
 
 runs:
   using: "composite"
   steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+  
     - name: Setup Docker buildx
       uses: docker/setup-buildx-action@v3
 
