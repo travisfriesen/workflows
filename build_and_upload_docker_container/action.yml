@@ -6,7 +6,7 @@ inputs:
     required: true
   BUILD_ARGS:
     description: 'The build arguments for Docker to build'
-    required: true
+    required: false
 
 runs:
   using: "composite"
@@ -29,6 +29,8 @@ runs:
           ${{ inputs.IMAGE_NAME }}:${{ github.run_number }}-${{ github.run_attempt }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        build-args: ${{ inputs.BUILD_ARGS }}
+
 
     - name: Verify image exists
       shell: bash
