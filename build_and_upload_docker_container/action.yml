@@ -7,6 +7,9 @@ inputs:
   BUILD_ARGS:
     description: 'The build arguments for Docker to build'
     required: false
+  ARCHITECTURE:
+    description: 'The platform of your host machine'
+    required: true
 
 runs:
   using: "composite"
@@ -21,7 +24,7 @@ runs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        platforms: linux/arm64
+        platforms: ${{ inputs.ARCHITECTURE }}
         push: false
         load: true
         tags: |
