@@ -16,6 +16,7 @@ This GitHub Action builds a Docker container with support for custom build argum
 |-------|-------------|----------|
 | `IMAGE_NAME` | The name of the Docker image to build and save | Yes      |
 | `BUILD_ARGS` | The build arguments for Docker to build | No       |
+| `ARCHITECTURE` | The CPU architecture of the destination machine | Yes |
 
 ## Usage
 
@@ -24,6 +25,7 @@ This GitHub Action builds a Docker container with support for custom build argum
   uses: ./build_and_upload_docker_container
   with:
     IMAGE_NAME: my-app
+    ARCHITECTURE: linux/amd64
     BUILD_ARGS: |
       ARG1=value1
       ARG2=value2
